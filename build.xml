@@ -1,0 +1,58 @@
+<project name="speed-me-up" basedir="." default="default">
+    <property name="test" value="${basedir}/test"/>
+    <property name="target" value="${basedir}/target"/>
+    <property name="lib" value="${basedir}/lib"/>
+    <property name="target.test" value="${target}/test"/>
+    <property name="target.reports" value="${target}/reports"/>
+    <property name="pattern.test" value="Test*.java"/>
+
+    <target name="default" depends="clean, init, compile.test, test"/>
+
+    <path id="lib.classpath">
+        <fileset dir="${lib}">
+            <filename name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <target name="clean">
+        <delete dir="${target}"/>
+    </target>
+
+    <target name="init">
+        <mkdir dir="${target}"/>
+    </target>
+
+    <target name="compile.test">
+        <mkdir dir="${target.test}"/>
+        <javac srcdir="${test}" destdir="${target.test}" source="1.6" target="1.6" debug="true">
+            <classpath>
+                <path refid="lib.classpath"/>
+            </classpath>
+        </javac>
+
+        <copy todir="${target.test}">
+            <fileset dir="${test}">
+                <type type="file" />
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="test">
+        <mkdir dir="${target.reports}"/>
+        <junit printsummary="on" dir="${target}" tempdir="${target}" haltonfailure="on" fork="true" forkmode="once"
+               showoutput="on">
+            <formatter type="xml" />
+            <classpath>
+                <path refid="lib.classpath"/>
+                <pathelement location="${target.test}"/>
+            </classpath>
+
+            <batchtest todir="${target.reports}">
+                <fileset dir="${test}">
+                    <include name="**/${pattern.test}"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+
+</project>
