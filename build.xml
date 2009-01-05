@@ -39,6 +39,9 @@
 
     <target name="test">
         <mkdir dir="${target.reports}"/>
+		<typedef  name="filter-fileset" classname="com.googlecode.tlb.support.junit.FilterFileSet" classpathref="lib.classpath"/>
+
+
         <junit printsummary="on" dir="${target}" tempdir="${target}" haltonfailure="on" fork="true" forkmode="once"
                showoutput="on">
             <formatter type="xml" />
@@ -48,9 +51,9 @@
             </classpath>
 
             <batchtest todir="${target.reports}">
-                <fileset dir="${test}">
+                <filter-fileset dir="${test}">
                     <include name="**/${pattern.test}"/>
-                </fileset>
+                </filter-fileset>
             </batchtest>
         </junit>
     </target>
